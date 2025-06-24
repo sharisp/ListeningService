@@ -21,7 +21,7 @@ namespace Listening.Infrastructure.Repository
         }
         public void Add(Album model)
         {
-            dbContext.Add(model);
+            dbContext.Albums.Add(model);
         }
 
         public async Task<List<Album>> GetAllByCategoryIdAsync(long categoryId)

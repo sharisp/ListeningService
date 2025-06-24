@@ -1,6 +1,7 @@
 ﻿using Domain.SharedKernel.Interfaces;
 using FileService.Api;
 using FluentValidation;
+using Infrastructure.SharedKernel;
 using Listening.Admin.Api.Dtos.Request;
 using Listening.Domain.Entities;
 using Listening.Domain.Interfaces;
@@ -17,7 +18,7 @@ namespace Listening.Admin.Api.Controllers
     [ApiController]
     public class KindController(
            IKindRepository repository,
-           KindDomainService domainService, ICurrentUser currentUser, IValidator<AddKindRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
+           KindDomainService domainService, ICurrentUser currentUser, IValidator<AddKindRequestDto> validator, IValidator<UpdateRequestDto> updateValidator,IUnitOfWork unitOfWork) : ControllerBase
     {
 
         [HttpGet("{id}")]
@@ -31,9 +32,9 @@ namespace Listening.Admin.Api.Controllers
         [HttpGet("List")]
         public async Task<ActionResult<ApiResponse<List<Kind>>>> GetAll()
         {
-            var info = await repository.GetAllAsync();
-
-            return Ok(ApiResponse<List<Kind>>.Ok(info));
+            var list = await repository.GetAllAsync();
+          
+            return Ok(ApiResponse<List<Kind>>.Ok(list));
         }
 
         [HttpPost]
@@ -43,6 +44,7 @@ namespace Listening.Admin.Api.Controllers
             //just several fields are required, so I do not use mapper here
             var info = await domainService.AddAsync(dto.Title, dto.CoverImgUrl);
 
+            await unitOfWork.SaveChangesAsync();
             return Ok(ApiResponse<long>.Ok(info.Id));
         }
 
@@ -56,7 +58,7 @@ namespace Listening.Admin.Api.Controllers
                 return NotFound(ApiResponse<string>.Fail("not exists"));
             }
             album.ChangeTitle(dto.Title);
-
+         await   unitOfWork.SaveChangesAsync();
             return Ok(ApiResponse<string>.Ok("success"));
         }
 

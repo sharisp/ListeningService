@@ -1,6 +1,7 @@
 ﻿using Infrastructure.SharedKernel;
 using Listening.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Listening.Infrastructure.Repository
 {
@@ -8,13 +9,15 @@ namespace Listening.Infrastructure.Repository
     {
         // 不能直接用DbContextOptions options
 
-        public AppDbContext(DbContextOptions<BaseDbContext> options )
+        public AppDbContext(DbContextOptions options )
             : base(options)
         {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
 
         }
 
