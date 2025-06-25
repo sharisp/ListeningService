@@ -1,5 +1,6 @@
 using Listening.Admin.Api.Middlewares;
 using Listening.Infrastructure;
+using Listening.Infrastructure.Helper;
 
 namespace Listening.Admin.Api
 {
@@ -11,8 +12,8 @@ namespace Listening.Admin.Api
             builder.Services.AddCommonApiCollection(builder.Configuration);
             // Add services to the container.
             builder.Services.AddInfrastructure(builder.Configuration);
-
-            var app = builder.Build();
+            builder.Services.AddScoped<PermissionCheckHelper>();
+      var app = builder.Build();
 
             app.UseMiddleware<CustomerExceptionMiddleware>();
             // Configure the HTTP request pipeline.
@@ -26,9 +27,9 @@ namespace Listening.Admin.Api
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
+            app.UseMiddleware<CustomPermissionCheckMiddleware>();
             app.Run();
         }
     }

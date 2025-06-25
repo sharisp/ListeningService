@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Listening.Infrastructure;
+using System.Net;
 
 namespace Listening.Admin.Api.Middlewares
 {

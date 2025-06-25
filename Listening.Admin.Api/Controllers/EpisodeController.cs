@@ -1,9 +1,11 @@
 ﻿using Domain.SharedKernel.Interfaces;
 using FluentValidation;
+using Listening.Admin.Api.Attributes;
 using Listening.Admin.Api.Dtos.Request;
 using Listening.Domain.Entities;
 using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
+using Listening.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,7 @@ namespace Listening.Admin.Api.Controllers
     {
 
         [HttpGet("{id}")]
+        [PermissionKey("Episode.FindById")]
         public async Task<ActionResult<ApiResponse<Episode?>>> FindById(long id)
         {
             var info = await repository.GetByIdAsync(id);
@@ -28,6 +31,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpGet("ListByAlbum/{albumId}")]
+        [PermissionKey("Episode.FindByKindId")]
         public async Task<ActionResult<ApiResponse<List<Episode>>>> FindByKindId(long albumId)
         {
             var info = await repository.GetAllByAlumIdAsync(albumId);
@@ -36,6 +40,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpPost]
+        [PermissionKey("Episode.Add")]
         public async Task<ActionResult<ApiResponse<long>>> Add(AddEpisodeRequestDto dto)
         {
             await ValidationHelper.ValidateModelAsync(dto, validator);
@@ -46,6 +51,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpPut("ChangeTitle/{id}")]
+        [PermissionKey("Episode.ChangeTitle")]
         public async Task<ActionResult<ApiResponse<string>>> ChangeTitle(long id, UpdateRequestDto dto)
         {
             await ValidationHelper.ValidateModelAsync(dto, updateValidator);
@@ -60,6 +66,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [PermissionKey("Episode.Delete")]
         public async Task<ActionResult<ApiResponse<string>>> Delete(long id)
         {
             var album = await repository.GetByIdAsync(id);
@@ -72,8 +79,8 @@ namespace Listening.Admin.Api.Controllers
             return Ok(ApiResponse<string>.Ok("success"));
         }
 
-        [HttpPut]
-        [Route("Hide/{id}")]
+        [HttpPut("Hide/{id}")]
+        [PermissionKey("Episode.Hide")]
         public async Task<ActionResult<ApiResponse<string>>> Hide(long id)
         {
             var album = await repository.GetByIdAsync(id);
@@ -87,6 +94,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpPut("Show/{id}")]
+        [PermissionKey("Episode.Show")]
         public async Task<ActionResult<ApiResponse<string>>> Show(long id)
         {
             var album = await repository.GetByIdAsync(id);
@@ -100,6 +108,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpPut("Sort/{albumId}")]
+        [PermissionKey("Episode.Sort")]
         public async Task<ActionResult<ApiResponse<string>>> Sort(long albumId, SortRequestDto req)
         {
             await domainService.SortAsync(albumId, req.Ids);

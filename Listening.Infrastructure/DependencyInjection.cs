@@ -2,6 +2,7 @@
 using Infrastructure.SharedKernel;
 using Listening.Domain;
 using Listening.Domain.Interfaces;
+using Listening.Infrastructure.Helper;
 using Listening.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ namespace Listening.Infrastructure
             #endregion
 
             services.AddScoped<AppDbContext>();
+            //special
+            services.AddHttpClient<ApiClientHelper>();
             services.AddScoped<IAlbumRepository, AlbumRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IKindRepository, KindRepository>();
