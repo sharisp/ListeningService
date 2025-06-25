@@ -1,5 +1,16 @@
 
 using Common.Jwt;
+using Domain.SharedKernel.Interfaces;
+using FluentValidation;
+using Identity.Api.ActionFilter;
+using Infrastructure.SharedKernel;
+using Listening.Api.Middlewares;
+using Listening.Infrastructure;
+using Listening.Infrastructure.Repository;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Listening.Api
 {
@@ -9,16 +20,13 @@ namespace Listening.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddCommonApiCollection(builder.Configuration);
             // Add services to the container.
-
-            builder.Services.AddControllers() ;
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddJWTAuthentication(builder.Configuration);
+            builder.Services.AddInfrastructure(builder.Configuration);
 
             var app = builder.Build();
 
+            app.UseMiddleware<CustomerExceptionMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

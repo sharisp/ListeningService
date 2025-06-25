@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Listening.Admin.Api.Middlewares
+namespace Listening.Api.Middlewares
 {
     public class CustomerExceptionMiddleware(RequestDelegate next, ILogger<CustomerExceptionMiddleware> logger)
     {

@@ -1,5 +1,4 @@
 ﻿using Domain.SharedKernel.Interfaces;
-using FileService.Api;
 using FluentValidation;
 using Listening.Admin.Api.Dtos.Request;
 using Listening.Domain.Entities;

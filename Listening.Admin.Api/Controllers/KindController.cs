@@ -1,5 +1,4 @@
 ﻿using Domain.SharedKernel.Interfaces;
-using FileService.Api;
 using FluentValidation;
 using Infrastructure.SharedKernel;
 using Listening.Admin.Api.Dtos.Request;
@@ -12,13 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Listening.Admin.Api.Controllers
 {
-   
-   // [Authorize]
+
+    // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class KindController(
            IKindRepository repository,
-           KindDomainService domainService, ICurrentUser currentUser, IValidator<AddKindRequestDto> validator, IValidator<UpdateRequestDto> updateValidator,IUnitOfWork unitOfWork) : ControllerBase
+           KindDomainService domainService, ICurrentUser currentUser, IValidator<AddKindRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
     {
 
         [HttpGet("{id}")]
@@ -44,7 +43,7 @@ namespace Listening.Admin.Api.Controllers
             //just several fields are required, so I do not use mapper here
             var info = await domainService.AddAsync(dto.Title, dto.CoverImgUrl);
 
-            await unitOfWork.SaveChangesAsync();
+         
             return Ok(ApiResponse<long>.Ok(info.Id));
         }
 
@@ -58,7 +57,7 @@ namespace Listening.Admin.Api.Controllers
                 return NotFound(ApiResponse<string>.Fail("not exists"));
             }
             album.ChangeTitle(dto.Title);
-         await   unitOfWork.SaveChangesAsync();
+      
             return Ok(ApiResponse<string>.Ok("success"));
         }
 

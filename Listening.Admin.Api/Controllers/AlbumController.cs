@@ -1,5 +1,4 @@
 ﻿using Domain.SharedKernel.Interfaces;
-using FileService.Api;
 using FluentValidation;
 using Listening.Admin.Api.Dtos.Request;
 using Listening.Domain.Entities;
@@ -11,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Listening.Admin.Api.Controllers
 {
-  //  [Authorize]
+    //  [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AlbumController(

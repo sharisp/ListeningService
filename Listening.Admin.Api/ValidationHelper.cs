@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FileService.Api
+namespace Listening.Admin.Api
 {
     public class ValidationHelper
     {

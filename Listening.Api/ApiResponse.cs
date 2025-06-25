@@ -1,4 +1,4 @@
-﻿namespace Listening.Admin.Api
+﻿namespace Listening.Api
 {
     public class ApiResponse<T>
     {
