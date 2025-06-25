@@ -34,7 +34,7 @@ Event Bus Integration (Planned)--Rabbitmq
 
 ## 📦 Special Dependencies
 
-This service uses **three NuGet packages** built for reusability and structure:
+This service uses my **three NuGet packages** built for reusability and structure,you can find the source code from my github
 
 - [`Andrew.Domain.SharedKernel`](https://www.nuget.org/packages/Andrew.Domain.SharedKernel)
 - [`Andrew.Infrastructure.SharedKernel`](https://www.nuget.org/packages/Andrew.Infrastructure.SharedKernel)
