@@ -25,7 +25,7 @@ namespace Listening.Infrastructure.Repository
         public async Task<List<Category>> GetAllByKindIdAsync(long kindId)
         {
 
-          return await  this.dbContext.Categories.Where(t=>t.KindId==kindId).ToListAsync();
+          return await  this.dbContext.Categories.Where(t=>t.KindId==kindId).OrderBy(t => t.SequenceNumber).ToListAsync();
         }
 
         public async Task<Category?> GetByIdAsync(long id)

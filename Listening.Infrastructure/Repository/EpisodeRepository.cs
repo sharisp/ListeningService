@@ -26,7 +26,7 @@ namespace Listening.Infrastructure.Repository
         public async Task<List<Episode>> GetAllByAlumIdAsync(long albumId)
         {
 
-            return await dbContext.Episodes.Where(t => t.AlbumId == albumId).ToListAsync();
+            return await dbContext.Episodes.Where(t => t.AlbumId == albumId).OrderBy(t => t.SequenceNumber).ToListAsync();
         }
 
         public async Task<Episode?> GetByIdAsync(long id)

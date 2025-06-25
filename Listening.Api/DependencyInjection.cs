@@ -17,6 +17,7 @@ namespace Listening.Api
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddScoped<UnitOfWorkActionFilter>();
             services.AddControllers(options =>
             {
                 options.Filters.AddService<UnitOfWorkActionFilter>();

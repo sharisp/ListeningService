@@ -27,7 +27,7 @@ namespace Listening.Infrastructure.Repository
 
         public async Task<List<Kind>> GetAllAsync()
         {
-            return await dbContext.Kinds.ToListAsync();
+            return await dbContext.Kinds.OrderBy(t => t.SequenceNumber).ToListAsync();
         }
 
         public async Task<Kind?> GetByIdAsync(long id)

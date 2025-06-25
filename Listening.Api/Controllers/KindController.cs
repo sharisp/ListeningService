@@ -1,4 +1,8 @@
-﻿using Listening.Domain.Entities;
+﻿using IdGen;
+using Listening.Api.Dtos;
+using Listening.Api.Dtos.Mapper;
+using Listening.Api.Helpers;
+using Listening.Domain.Entities;
 using Listening.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,23 +13,32 @@ namespace Listening.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class KindController(
-           IKindRepository repository) : ControllerBase
+           IKindRepository repository, MemoryCacheHelper memoryCacheHelper, KindMapper mapper) : ControllerBase
     {
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiResponse<Kind?>>> FindById(long id)
+        public async Task<ActionResult<ApiResponse<KindResponseDto?>>> FindById(long id)
         {
-            var info = await repository.GetByIdAsync(id);
-            //just for admin use,return All album info
-            return Ok(ApiResponse<Kind?>.Ok(info));
+            var kind = await memoryCacheHelper.GetOrCreateAsync<Kind?>($"KindController_FindById_{id}", async entry =>
+                {
+
+                    return await repository.GetByIdAsync(id);
+                });
+            var responseDto = mapper.ToDto(kind);
+            return Ok(ApiResponse<KindResponseDto?>.Ok(responseDto));
         }
 
         [HttpGet("List")]
-        public async Task<ActionResult<ApiResponse<List<Kind>>>> GetAll()
+        public async Task<ActionResult<ApiResponse<List<KindResponseDto>>>> GetAll()
         {
-            var list = await repository.GetAllAsync();
+            var kinds = await memoryCacheHelper.GetOrCreateAsync<List<Kind>>($"KindController_GetAll", async entry =>
+                        {
 
-            return Ok(ApiResponse<List<Kind>>.Ok(list));
+                            return await repository.GetAllAsync();
+                        });
+
+            var responseDtos = mapper.ToDtos(kinds);
+            return Ok(ApiResponse<List<KindResponseDto>>.Ok(responseDtos));
         }
 
     }

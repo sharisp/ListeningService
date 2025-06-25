@@ -27,7 +27,7 @@ namespace Listening.Infrastructure.Repository
         public async Task<List<Album>> GetAllByCategoryIdAsync(long categoryId)
         {
 
-            return await dbContext.Albums.Where(t => t.CategoryId == categoryId).ToListAsync();
+            return await dbContext.Albums.Where(t => t.CategoryId == categoryId).OrderBy(t=>t.SequenceNumber).ToListAsync();
         }
 
         public async Task<Album?> GetByIdAsync(long id)
