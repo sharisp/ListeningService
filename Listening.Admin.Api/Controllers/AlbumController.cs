@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Listening.Admin.Api.Controllers
 {
-    //  [Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AlbumController(
