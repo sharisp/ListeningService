@@ -18,7 +18,12 @@ namespace Listening.Infrastructure.Repository
         {
             this.dbContext = dbContext;
         }
+        public IQueryable<Kind> Query()
+        {
+            var query = dbContext.Kinds.AsQueryable();
 
+            return query;
+        }
         public void Add(Kind model)
         {
 

@@ -1,7 +1,6 @@
 ﻿using Identity.Domain.Constants;
 using Infrastructure.SharedKernel;
 using Listening.Admin.Api.Attributes;
-using Listening.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using System.Security.Claims;

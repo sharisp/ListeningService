@@ -1,4 +1,4 @@
-﻿namespace Listening.Infrastructure
+﻿namespace Listening.Admin.Api
 {
     public class ApiResponse<T>
     {
@@ -7,7 +7,7 @@
         public int StatusCode { get; set; } = 200; // Default to 200 OK
         public string? ErrorMsg { get; set; }
 
-        public static ApiResponse<T> Ok(T data, int statusCode = 200)
+        public static ApiResponse<T> Ok(T? data, int statusCode = 200)
         {
             var response = new ApiResponse<T>();
 

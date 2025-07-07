@@ -1,6 +1,5 @@
 ﻿using Identity.Domain.Constants;
 using Infrastructure.SharedKernel;
-using Listening.Infrastructure;
 using Listening.Infrastructure.Helper;
 using Microsoft.AspNetCore.Http;
 using System;

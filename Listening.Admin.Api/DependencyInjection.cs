@@ -3,7 +3,6 @@ using Domain.SharedKernel.Interfaces;
 using FluentValidation;
 using Infrastructure.SharedKernel;
 using Listening.Admin.Api.ActionFilter;
-using Listening.Infrastructure;
 using Listening.Infrastructure.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,15 @@ namespace Listening.Admin.Api
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddScoped<UnitOfWorkActionFilter>();
             services.AddControllers(options =>

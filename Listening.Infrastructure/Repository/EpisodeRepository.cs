@@ -18,6 +18,12 @@ namespace Listening.Infrastructure.Repository
         {
             this.dbContext = dbContext;
         }
+        public IQueryable<Episode> Query()
+        {
+            var query = dbContext.Episodes.AsQueryable();
+
+            return query;
+        }
         public void Add(Episode model)
         {
            dbContext.Episodes.Add(model);

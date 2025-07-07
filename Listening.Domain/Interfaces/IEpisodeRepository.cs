@@ -9,6 +9,7 @@ namespace Listening.Domain.Interfaces
 {
     public interface IEpisodeRepository
     {
+        IQueryable<Episode> Query();
         void Add(Episode model);
         Task<List<Episode>> GetAllByAlumIdAsync(long albumId);
         Task<Episode?> GetByIdAsync(long id);

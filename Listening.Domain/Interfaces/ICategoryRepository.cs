@@ -9,6 +9,7 @@ namespace Listening.Domain.Interfaces
 {
     public interface ICategoryRepository
     {
+        IQueryable<Category> Query();
         Task<List<Category>> GetAllByKindIdAsync(long kindId);
         Task<Category?> GetByIdAsync(long id);
         Task<int> GetMaxSequenceNumberAsync(long kindId);

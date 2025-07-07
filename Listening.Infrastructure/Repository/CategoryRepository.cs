@@ -12,10 +12,16 @@ namespace Listening.Infrastructure.Repository
     public class CategoryRepository : ICategoryRepository
     {
         private readonly AppDbContext dbContext;
-
+      
         public CategoryRepository(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+        public IQueryable<Category> Query()
+        {
+            var query = dbContext.Categories.AsQueryable();
+
+            return query;
         }
         public void Add(Category model)
         {

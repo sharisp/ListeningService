@@ -13,8 +13,9 @@ namespace Listening.Admin.Api
             // Add services to the container.
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddScoped<PermissionCheckHelper>();
-      var app = builder.Build();
+            var app = builder.Build();
 
+            app.UseCors("AllowAll");
             app.UseMiddleware<CustomerExceptionMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
