@@ -15,7 +15,15 @@ namespace Listening.Api
         public static IServiceCollection AddCommonApiCollection(this IServiceCollection services, IConfiguration configuration)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddScoped<UnitOfWorkActionFilter>();
             services.AddControllers(options =>

@@ -23,6 +23,13 @@ namespace Listening.Admin.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            else
+            {
+                var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+                app.Urls.Add($"http://*:{port}");
+
+                app.MapGet("/", () => "Hello from Listen Admin!");
+            }
 
             app.UseHttpsRedirection();
 
