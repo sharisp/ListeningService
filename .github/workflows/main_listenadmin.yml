@@ -67,6 +67,15 @@ jobs:
       contents: read #This is required for actions/checkout
 
     steps:
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_66177CAD43564FE0944BD99952F12694 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_302DD1DDED9B455487B899CDB6F929F8 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F5FF55F724E5481DB3878AC734381CD3 }}
+          enable-AzPSSession: false
+
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
