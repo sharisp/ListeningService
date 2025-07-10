@@ -78,7 +78,7 @@ namespace Listening.Admin.Api.Controllers
             var album = await repository.GetByIdAsync(id);
             if (album == null)
             {
-                return NotFound(ApiResponse<string>.Fail("not exists"));
+                return this.FailResponse("not exist");
             }
             album.ChangeTitle(dto.Title);
 
@@ -92,7 +92,7 @@ namespace Listening.Admin.Api.Controllers
             var album = await repository.GetByIdAsync(id);
             if (album == null)
             {
-                return NotFound(ApiResponse<string>.Fail("not exists"));
+                return this.FailResponse("not exist");
             }
             album.SoftDelete(currentUser);
 
@@ -106,7 +106,7 @@ namespace Listening.Admin.Api.Controllers
             var album = await repository.GetByIdAsync(id);
             if (album == null)
             {
-                return NotFound(ApiResponse<string>.Fail("not exists"));
+                return this.FailResponse("not exist");
             }
             album.Hide();
 
@@ -120,7 +120,7 @@ namespace Listening.Admin.Api.Controllers
             var album = await repository.GetByIdAsync(id);
             if (album == null)
             {
-                return NotFound(ApiResponse<string>.Fail("not exists"));
+                return this.FailResponse("not exist");
             }
             album.Show();
 
