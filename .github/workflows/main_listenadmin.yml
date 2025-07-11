@@ -58,7 +58,8 @@ jobs:
                 JWT__RefreshTokenExpiresHours="189" \
                 JWT__Issuer="test" \
                 JWT__Audience="test"
-  deploy:
+  deploy:  
+    environment: Azure
     runs-on: ubuntu-latest
     needs: build
     
