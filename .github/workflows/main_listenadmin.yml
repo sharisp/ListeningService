@@ -11,15 +11,12 @@ on:
 
 jobs:
   build:  
-    environment: Azure
+  
     runs-on: ubuntu-latest
     permissions:
       id-token: write          # ✅ 添加这行
       contents: read           # 这行你已有，保留
-    env:                             # 这里注入环境变量，供 build 时使用
-      AZURE_SQLSERVER: ${{ secrets.AZURE_SQLSERVER }}
-      AZURE_REDIS_CONNECTION: ${{ secrets.AZURE_REDIS_CONNECTION }}
-      JWT_KEY: ${{ secrets.AZURE_JWT_KEY }}
+  
     steps:
       - uses: actions/checkout@v4
 
