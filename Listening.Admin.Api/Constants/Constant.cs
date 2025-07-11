@@ -2,6 +2,6 @@
 {
     public static class ConstantValue
     {
-        public static string SystemName = "Listening_Admin";
+        public static string SystemName = "ListeningAdmin";
     }
 }

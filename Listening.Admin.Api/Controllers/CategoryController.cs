@@ -23,7 +23,7 @@ namespace Listening.Admin.Api.Controllers
     {
 
         [HttpGet("{id}")]
-        [PermissionKey("Category.FindById")]
+        [PermissionKey("Category.List")]
         public async Task<ActionResult<ApiResponse<Category?>>> FindById(long id)
         {
             var info = await repository.GetByIdAsync(id);
@@ -49,7 +49,7 @@ namespace Listening.Admin.Api.Controllers
             return this.OkResponse(res);
         }
         [HttpGet("ListByKind/{kindId}")]
-        [PermissionKey("Category.FindByKindId")]
+        [PermissionKey("Category.List")]
         public async Task<ActionResult<ApiResponse<List<Category>>>> FindByKindId(long kindId)
         {
             var info = await repository.GetAllByKindIdAsync(kindId);

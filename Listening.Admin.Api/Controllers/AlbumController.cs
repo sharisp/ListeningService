@@ -23,7 +23,7 @@ namespace Listening.Admin.Api.Controllers
     {
 
         [HttpGet("{id}")]
-        [PermissionKey("Album.FindById")]
+        [PermissionKey("Album.List")]
         public async Task<ActionResult<ApiResponse<Album?>>> FindById(long id)
         {
             var album = await repository.GetByIdAsync(id);

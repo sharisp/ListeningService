@@ -24,7 +24,7 @@ namespace Listening.Admin.Api.Controllers
     {
 
         [HttpGet("{id}")]
-        [PermissionKey("Episode.FindById")]
+        [PermissionKey("Episode.List")]
         public async Task<ActionResult<ApiResponse<Episode?>>> FindById(long id)
         {
             var info = await repository.GetByIdAsync(id);
@@ -33,7 +33,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpGet("ListByAlbum/{albumId}")]
-        [PermissionKey("Episode.FindByAlbumId")]
+        [PermissionKey("Episode.List")]
         public async Task<ActionResult<ApiResponse<List<Episode>>>> FindByAlbumId(long albumId)
         {
             var info = await repository.GetAllByAlumIdAsync(albumId);

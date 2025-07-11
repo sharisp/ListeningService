@@ -25,7 +25,7 @@ namespace Listening.Admin.Api.Controllers
     {
 
         [HttpGet("{id}")]
-        [PermissionKey("Kind.FindById")]
+        [PermissionKey("Kind.List")]
         public async Task<ActionResult<ApiResponse<Kind?>>> FindById(long id)
         {
             var info = await repository.GetByIdAsync(id);
@@ -34,7 +34,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpGet("List")]
-        [PermissionKey("Kind.GetAll")]
+        [PermissionKey("Kind.List")]
         public async Task<ActionResult<ApiResponse<List<Kind>>>> GetAll()
         {
             var list = await repository.GetAllAsync();
