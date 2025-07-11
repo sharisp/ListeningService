@@ -5,7 +5,7 @@ namespace Listening.Admin.Api.Dtos.Request
     public class AddRequestDto
     {
         public string Title { get;  set; }
-        public int ForeginId { get;  set; }
+        public long ForeginId { get;  set; }
         public Uri? CoverImgUrl { get;  set; }
     }
 
