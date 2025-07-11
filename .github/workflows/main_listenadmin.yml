@@ -81,7 +81,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
+          path: myapp  # ✅ 指定下载路径
       
+      - name: List contents of publish folder
+        run: ls -al myapp
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -89,5 +92,5 @@ jobs:
         with:
           app-name: 'listenadmin'
           slot-name: 'Production'
-          package: .
+          package: myapp
           
