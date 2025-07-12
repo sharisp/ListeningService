@@ -1,6 +1,7 @@
 using Listening.Admin.Api.Middlewares;
 using Listening.Infrastructure;
 using Listening.Infrastructure.Helper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Listening.Admin.Api
 {
@@ -28,9 +29,10 @@ namespace Listening.Admin.Api
                 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
                 app.Urls.Add($"http://*:{port}");
 
-                app.MapGet("/", () => "Hello from Listen Admin!");
+               
             }
 
+            app.MapGet("/", [AllowAnonymous] () => "Hello from Listen Admin!");
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

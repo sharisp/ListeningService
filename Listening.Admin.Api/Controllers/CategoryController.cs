@@ -80,6 +80,7 @@ namespace Listening.Admin.Api.Controllers
             }
             info.ChangeTitle(dto.Title);
             info.ChangeSequenceNumber(dto.SequenceNumber);
+          
             if (dto.CoverImgUrl != null)
             {
                 info.ChangeCoverImgUrl(dto.CoverImgUrl);
