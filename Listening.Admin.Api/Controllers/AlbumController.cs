@@ -32,7 +32,7 @@ namespace Listening.Admin.Api.Controllers
         }
 
         [HttpGet("ListByCatagory/{categoryId}")]
-        [PermissionKey("Album.FindByCategoryId")]
+        [PermissionKey("Album.List")]
         public async Task<ActionResult<ApiResponse<List<Album>>>> FindByCategoryId(long categoryId)
         {
             var albums = await repository.GetAllByCategoryIdAsync(categoryId);

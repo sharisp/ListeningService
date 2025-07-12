@@ -64,9 +64,9 @@ namespace Listening.Admin.Api.Controllers
         public async Task<ActionResult<ApiResponse<BaseResponse>>> Add(AddEpisodeRequestDto dto)
         {
             await ValidationHelper.ValidateModelAsync(dto, validator);
-            //just several fields are required, so I do not use mapper here
+            
             var info = await domainService.AddAsync(dto.AlumId, dto.Title, dto.SubtitleType, dto.SubtitleContent, dto.AudioUrl, dto.DurationInSeconds, dto.CoverImgUrl);
-            //  long alumId, string title, string subtitleType, string subtitleContent, Uri audioUrl, long durationInSeconds, Uri? coverImgUrl
+        
             return Ok(ApiResponse<long>.Ok(info.Id));
         }
 
