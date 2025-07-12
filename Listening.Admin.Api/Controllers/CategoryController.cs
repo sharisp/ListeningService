@@ -19,7 +19,7 @@ namespace Listening.Admin.Api.Controllers
     [ApiController]
     public class CategoryController(
            ICategoryRepository repository,
-           CategoryDomainService domainService, ICurrentUser currentUser, IValidator<AddRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
+           CategoryDomainService domainService, ICurrentUser currentUser, IValidator<CategoryRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
     {
 
         [HttpGet("{id}")]
@@ -59,11 +59,11 @@ namespace Listening.Admin.Api.Controllers
 
         [HttpPost]
         [PermissionKey("Category.Add")]
-        public async Task<ActionResult<ApiResponse<BaseResponse>>> Add(AddRequestDto dto)
+        public async Task<ActionResult<ApiResponse<BaseResponse>>> Add(CategoryRequestDto dto)
         {
             await ValidationHelper.ValidateModelAsync(dto, validator);
             //just several fields are required, so I do not use mapper here
-            var info = await domainService.AddAsync(dto.Title, dto.ForeginId, dto.CoverImgUrl);
+            var info = await domainService.AddAsync(dto.Title, dto.KindId, dto.CoverImgUrl);
 
             return Ok(ApiResponse<long>.Ok(info.Id));
         }
@@ -73,14 +73,20 @@ namespace Listening.Admin.Api.Controllers
         public async Task<ActionResult<ApiResponse<BaseResponse>>> Update(long id, UpdateRequestDto dto)
         {
             await ValidationHelper.ValidateModelAsync(dto, updateValidator);
-            var album = await repository.GetByIdAsync(id);
-            if (album == null)
+            var info = await repository.GetByIdAsync(id);
+            if (info == null)
             {
                 return this.FailResponse("not exist");
             }
-            album.ChangeTitle(dto.Title);
+            info.ChangeTitle(dto.Title);
+            info.ChangeSequenceNumber(dto.SequenceNumber);
+            if (dto.CoverImgUrl != null)
+            {
+                info.ChangeCoverImgUrl(dto.CoverImgUrl);
+            }
 
-             return this.OkResponse(id);
+
+            return this.OkResponse(id);
         }
 
         [HttpDelete("{id}")]

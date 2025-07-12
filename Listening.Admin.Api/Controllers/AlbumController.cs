@@ -19,7 +19,7 @@ namespace Listening.Admin.Api.Controllers
     [ApiController]
     public class AlbumController(
             IAlbumRepository repository,
-            AlbumDomainService domainService, ICurrentUser currentUser, IValidator<AddRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
+            AlbumDomainService domainService, ICurrentUser currentUser, IValidator<AlbumRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
     {
 
         [HttpGet("{id}")]
@@ -42,7 +42,7 @@ namespace Listening.Admin.Api.Controllers
 
         [HttpGet("Pagination")]
         [PermissionKey("Album.List")]
-        public async Task<ActionResult<ApiResponse<PaginationResponse<Album>>>> Pagination(long categoryId=0, string title = "", int pageIndex = 1, int pageSize = 10)
+        public async Task<ActionResult<ApiResponse<PaginationResponse<Album>>>> Pagination(long categoryId = 0, string title = "", int pageIndex = 1, int pageSize = 10)
         {
             var query = repository.Query();
 
@@ -60,11 +60,11 @@ namespace Listening.Admin.Api.Controllers
         }
         [HttpPost]
         [PermissionKey("Album.Add")]
-        public async Task<ActionResult<ApiResponse<BaseResponse>>> Add(AddRequestDto dto)
+        public async Task<ActionResult<ApiResponse<BaseResponse>>> Add(AlbumRequestDto dto)
         {
             await ValidationHelper.ValidateModelAsync(dto, validator);
             //just several fields are required, so I do not use mapper here
-            Album album = await domainService.AddAsync(dto.Title, dto.ForeginId, dto.CoverImgUrl);
+            Album album = await domainService.AddAsync(dto.Title, dto.CategoryId, dto.CoverImgUrl);
 
             return this.OkResponse(album.Id);
         }
@@ -80,7 +80,11 @@ namespace Listening.Admin.Api.Controllers
                 return this.FailResponse("album not exist");
             }
             album.ChangeTitle(dto.Title);
-
+            album.ChangeSequenceNumber(dto.SequenceNumber);
+            if (dto.CoverImgUrl != null)
+            {
+                album.ChangeCoverImgUrl(dto.CoverImgUrl);
+            }
             return this.OkResponse(id);
         }
 

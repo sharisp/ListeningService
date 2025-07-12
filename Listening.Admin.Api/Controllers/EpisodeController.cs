@@ -70,17 +70,37 @@ namespace Listening.Admin.Api.Controllers
             return Ok(ApiResponse<long>.Ok(info.Id));
         }
 
+        [HttpPut("{id}")]
+        [PermissionKey("Episode.Update")]
+        public async Task<ActionResult<ApiResponse<BaseResponse>>> Update(long id, UpdateRequestDto dto)
+        {
+            await ValidationHelper.ValidateModelAsync(dto, updateValidator);
+            var info = await repository.GetByIdAsync(id);
+            if (info == null)
+            {
+                return this.FailResponse("not exist");
+            }
+            info.ChangeTitle(dto.Title);
+            info.ChangeSequenceNumber(dto.SequenceNumber);
+            if (dto.CoverImgUrl != null)
+            {
+                info.ChangeCoverImgUrl(dto.CoverImgUrl);
+            }
+
+
+            return this.OkResponse(id);
+        }
         [HttpPut("ChangeTitle/{id}")]
         [PermissionKey("Episode.ChangeTitle")]
         public async Task<ActionResult<ApiResponse<BaseResponse>>> ChangeTitle(long id, UpdateRequestDto dto)
         {
             await ValidationHelper.ValidateModelAsync(dto, updateValidator);
-            var album = await repository.GetByIdAsync(id);
-            if (album == null)
+            var info = await repository.GetByIdAsync(id);
+            if (info == null)
             {
                 return this.FailResponse("not exist");
             }
-            album.ChangeTitle(dto.Title);
+            info.ChangeTitle(dto.Title);
 
              return this.OkResponse(id);
         }
