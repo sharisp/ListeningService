@@ -15,7 +15,7 @@ namespace Listening.Admin.Api
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddScoped<PermissionCheckHelper>();
             var app = builder.Build();
-
+            app.UseRouting();
             app.UseCors("AllowAll");
             app.UseMiddleware<CustomerExceptionMiddleware>();
             // Configure the HTTP request pipeline.
@@ -24,19 +24,19 @@ namespace Listening.Admin.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            else
+         /*   else
             {
                 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
                 app.Urls.Add($"http://*:{port}");
 
                
-            }
+            }*/
 
-            app.MapGet("/", [AllowAnonymous] () => "Hello from Listen Admin!");
-            app.UseHttpsRedirection();
+          //  app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
+            app.MapGet("/", [AllowAnonymous] () => "Hello from Listen Admin!");
             app.MapControllers();
 
             app.UseMiddleware<CustomPermissionCheckMiddleware>();
