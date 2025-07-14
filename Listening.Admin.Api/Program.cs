@@ -23,6 +23,8 @@ namespace Listening.Admin.Api
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+                app.Urls.Add($"http://*:5017");
             }
          /*   else
             {

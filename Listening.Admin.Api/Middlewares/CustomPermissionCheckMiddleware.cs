@@ -3,6 +3,7 @@ using Infrastructure.SharedKernel;
 using Listening.Admin.Api.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using System.Security;
 using System.Security.Claims;
 
 namespace Listening.Admin.Api.Middlewares;
@@ -43,6 +44,7 @@ public class CustomPermissionCheckMiddleware(
 
             // get userId from claims
             var userId = context?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+          
             if (string.IsNullOrEmpty(userId))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -66,6 +68,17 @@ public class CustomPermissionCheckMiddleware(
             {
                 await next(context);
                 return;
+            }
+
+            string? permissionStr = context?.User.FindFirst("permissions")?.Value;
+            if (!string.IsNullOrWhiteSpace(permissionStr))
+            {
+                var permissions = permissionStr.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                if (permissions.Contains(ConstantValue.SystemName + "." + permissionKey, StringComparer.OrdinalIgnoreCase))
+                {
+                    await next(context);
+                    return;
+                }
             }
             //can not use DI here
             var permissionHelper = context.RequestServices.GetRequiredService<PermissionCheckHelper>();

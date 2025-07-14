@@ -40,6 +40,11 @@ namespace Listening.Domain.Entities
         }
         public string ParseSubtitleStr(string subtitleType, string subtitleContent, long durationSeconds)
         {
+            //correct subtitleContent,just return it
+            if (subtitleType=="json")
+            {
+                return subtitleContent;
+            }
             return ParseSubtitle(subtitleType, subtitleContent, durationSeconds).ToJsonString();
         }
 

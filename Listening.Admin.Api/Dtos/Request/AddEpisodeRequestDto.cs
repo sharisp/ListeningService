@@ -31,7 +31,7 @@ namespace Listening.Admin.Api.Dtos.Request
                 .NotEmpty().WithMessage("AudioUrl is required.");
             RuleFor(x => x.AudioUrl)
                 .NotEmpty().WithMessage("AudioUrl is required.");
-
+           
         }
     }
 }

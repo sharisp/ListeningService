@@ -42,7 +42,7 @@ namespace Listening.Admin.Api.Controllers
         }
         [HttpGet("Pagination")]
         [PermissionKey("Episode.List")]
-        public async Task<ActionResult<ApiResponse<PaginationResponse<Category>>>> Pagination(long albumId = 0, string title = "", int pageIndex = 1, int pageSize = 10)
+        public async Task<ActionResult<ApiResponse<PaginationResponse<Episode>>>> Pagination(long albumId = 0, string title = "", int pageIndex = 1, int pageSize = 10)
         {
             var query = repository.Query();
 
