@@ -4,7 +4,7 @@ namespace Listening.Admin.Api.Dtos.Request
 {
     public class AddEpisodeRequestDto
     {
-        public long AlumId { get; set; }
+        public long AlbumId { get; set; }
         public string Title { get; set; }
         public string SubtitleType { get; set; }
         public string SubtitleContent { get; set; }

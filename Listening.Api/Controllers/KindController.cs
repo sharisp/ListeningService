@@ -13,32 +13,37 @@ namespace Listening.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class KindController(
-           IKindRepository repository, MemoryCacheHelper memoryCacheHelper, KindMapper mapper) : ControllerBase
+           IKindRepository repository, MemoryCacheHelper memoryCacheHelper, BaseEntityMapper mapper) : ControllerBase
     {
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiResponse<KindResponseDto?>>> FindById(long id)
+        public async Task<ActionResult<ApiResponse<BaseEntityResponseDto?>>> FindById(long id)
         {
-            var kind = await memoryCacheHelper.GetOrCreateAsync<Kind?>($"KindController_FindById_{id}", async entry =>
+            var responseDto = await memoryCacheHelper.GetOrCreateAsync<BaseEntityResponseDto?>($"KindController_FindById_{id}", async entry =>
                 {
 
-                    return await repository.GetByIdAsync(id);
+                    var info = await repository.GetByIdAsync(id);
+                    return mapper.ToDto(info);
                 });
-            var responseDto = mapper.ToDto(kind);
-            return Ok(ApiResponse<KindResponseDto?>.Ok(responseDto));
+            return Ok(ApiResponse<BaseEntityResponseDto?>.Ok(responseDto));
         }
 
         [HttpGet("List")]
-        public async Task<ActionResult<ApiResponse<List<KindResponseDto>>>> GetAll()
+        public async Task<ActionResult<ApiResponse<List<BaseEntityResponseDto>>>> GetAll()
         {
-            var kinds = await memoryCacheHelper.GetOrCreateAsync<List<Kind>>($"KindController_GetAll", async entry =>
+            var responseDtos = await memoryCacheHelper.GetOrCreateAsync<List<BaseEntityResponseDto>>($"KindController_GetAll", async entry =>
                         {
 
-                            return await repository.GetAllAsync();
+                            var kinds = await repository.GetAllAsync();
+                            var dtos = new List<BaseEntityResponseDto>();
+                            foreach (var item in kinds.Where(t => t.IsShow == true))
+                            {
+                                dtos.Add(mapper.ToDto(item));
+                            }
+                            return dtos;
                         });
 
-            var responseDtos = mapper.ToDtos(kinds);
-            return Ok(ApiResponse<List<KindResponseDto>>.Ok(responseDtos));
+            return Ok(ApiResponse<List<BaseEntityResponseDto>>.Ok(responseDtos));
         }
 
     }

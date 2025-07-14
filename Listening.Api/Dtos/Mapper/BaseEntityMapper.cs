@@ -8,9 +8,9 @@ namespace Listening.Api.Dtos.Mapper
     /// </summary>
 
     [Mapper(AllowNullPropertyAssignment = false, ThrowOnPropertyMappingNullMismatch = false)]
-    public partial class KindMapper : IMapperService
+    public partial class BaseEntityMapper : IMapperService
     {
-        public partial KindResponseDto?  ToDto(Kind? info);
-        public partial List<KindResponseDto> ToDtos(List<Kind> infos);
+        public partial BaseEntityResponseDto?  ToDto(ListeningBaseEntity? info);
+        public partial List<BaseEntityResponseDto> ToDtos(List<ListeningBaseEntity> infos);
     }
 }

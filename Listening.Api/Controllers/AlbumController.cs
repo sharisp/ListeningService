@@ -1,5 +1,9 @@
 ﻿using Domain.SharedKernel.Interfaces;
 using FluentValidation;
+using IdGen;
+using Listening.Api.Dtos;
+using Listening.Api.Dtos.Mapper;
+using Listening.Api.Helpers;
 using Listening.Domain.Entities;
 using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
@@ -11,25 +15,38 @@ namespace Listening.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AlbumController(
-            IAlbumRepository repository) : ControllerBase
+            IAlbumRepository repository, MemoryCacheHelper memoryCacheHelper, BaseEntityMapper mapper) : ControllerBase
     {
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiResponse<Album?>>> FindById(long id)
+        public async Task<ActionResult<ApiResponse<BaseEntityResponseDto?>>> FindById(long id)
         {
-            var album = await repository.GetByIdAsync(id);
-            //just for admin use,return All album info
-            return Ok(ApiResponse<Album?>.Ok(album));
+            var album = await memoryCacheHelper.GetOrCreateAsync<BaseEntityResponseDto?>($"AlbumController_FindById_"+ id, async entry =>
+            {
+                var info = await repository.GetByIdAsync(id);
+                return mapper.ToDto(info);
+            });
+            return Ok(ApiResponse<BaseEntityResponseDto?>.Ok(album));
         }
 
         [HttpGet("ListByCatagory/{categoryId}")]
-        public async Task<ActionResult<ApiResponse<List<Album>>>> FindByCategoryId(long categoryId)
+        public async Task<ActionResult<ApiResponse<List<BaseEntityResponseDto>?>>> FindByCategoryId(long categoryId)
         {
-            var albums = await repository.GetAllByCategoryIdAsync(categoryId);
+            var responseDtos = await memoryCacheHelper.GetOrCreateAsync<List<BaseEntityResponseDto>?>($"AlbumController_FindByCategoryId_"+categoryId, async entry =>
+            {
 
-            return Ok(ApiResponse<List<Album>>.Ok(albums));
+                var albums = await repository.GetAllByCategoryIdAsync(categoryId);
+                var dtos = new List<BaseEntityResponseDto>();
+                foreach (var item in albums.Where(t => t.IsShow == true))
+                {
+                    dtos.Add(mapper.ToDto(item));
+                }
+                return dtos;
+            });
+
+            return Ok(ApiResponse<List<BaseEntityResponseDto>>.Ok(responseDtos));
         }
 
-    
+
     }
 }

@@ -1,21 +1,8 @@
-
-using Common.Jwt;
-using Domain.SharedKernel.Interfaces;
-using FluentValidation;
-using Identity.Api.ActionFilter;
-using Infrastructure.SharedKernel;
-using Listening.Api.Dtos;
 using Listening.Api.Dtos.Mapper;
 using Listening.Api.Helpers;
 using Listening.Api.Middlewares;
-using Listening.Domain.Entities;
 using Listening.Infrastructure;
-using Listening.Infrastructure.Repository;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Listening.Api
 {
@@ -40,16 +27,17 @@ namespace Listening.Api
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.Urls.Add($"http://*:5001");
             }
-            else
-            {
-                var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-                app.Urls.Add($"http://*:{port}");
+            /*   else
+               {
+                   var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+                   app.Urls.Add($"http://*:{port}");
 
-                app.MapGet("/", () => "Hello from Listen Admin!");
-            }
+               }*/
 
-            app.UseHttpsRedirection();
+            app.MapGet("/", [AllowAnonymous]()  => "Hello from User Listen!");
+         //   app.UseHttpsRedirection();
 
             app.UseAuthorization();
 

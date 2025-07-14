@@ -65,7 +65,7 @@ namespace Listening.Admin.Api.Controllers
         {
             await ValidationHelper.ValidateModelAsync(dto, validator);
             
-            var info = await domainService.AddAsync(dto.AlumId, dto.Title, dto.SubtitleType, dto.SubtitleContent, dto.AudioUrl, dto.DurationInSeconds, dto.CoverImgUrl);
+            var info = await domainService.AddAsync(dto.AlbumId, dto.Title, dto.SubtitleType, dto.SubtitleContent, dto.AudioUrl, dto.DurationInSeconds, dto.CoverImgUrl);
         
             return Ok(ApiResponse<long>.Ok(info.Id));
         }

@@ -1,5 +1,8 @@
 ﻿using Domain.SharedKernel.Interfaces;
 using FluentValidation;
+using Listening.Api.Dtos;
+using Listening.Api.Dtos.Mapper;
+using Listening.Api.Helpers;
 using Listening.Domain.Entities;
 using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
@@ -12,23 +15,31 @@ namespace Listening.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class EpisodeController(
-           IEpisodeRepository repository) : ControllerBase
+           IEpisodeRepository repository, MemoryCacheHelper memoryCacheHelper, EpisodeMapper mapper) : ControllerBase
     {
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiResponse<Episode?>>> FindById(long id)
+        public async Task<ActionResult<ApiResponse<EpisodeResponseDto?>>> FindById(long id)
         {
-            var info = await repository.GetByIdAsync(id);
-            //just for admin use,return All album info
-            return Ok(ApiResponse<Episode?>.Ok(info));
+            var info = await memoryCacheHelper.GetOrCreateAsync<EpisodeResponseDto>($"EpisodeController_FindById_"+ id, async entry =>
+            {
+
+                var episode= await repository.GetByIdAsync(id);
+                return mapper.ToDto(episode);
+            });
+            return Ok(ApiResponse<EpisodeResponseDto?>.Ok(info));
         }
 
         [HttpGet("ListByAlbum/{albumId}")]
-        public async Task<ActionResult<ApiResponse<List<Episode>>>> FindByKindId(long albumId)
+        public async Task<ActionResult<ApiResponse<List<EpisodeResponseDto>>>> FindByAlbumId(long albumId)
         {
-            var info = await repository.GetAllByAlumIdAsync(albumId);
+            var info = await memoryCacheHelper.GetOrCreateAsync<List<EpisodeResponseDto>>($"EpisodeController_FindByAlbumId_"+ albumId, async entry =>
+            {
 
-            return Ok(ApiResponse<List<Episode>>.Ok(info));
+                var episodes = await repository.GetAllByAlumIdAsync(albumId);
+                return mapper.ToDtos(episodes.Where(t=>t.IsShow==true).ToList());
+            });
+            return Ok(ApiResponse<List<EpisodeResponseDto>>.Ok(info));
         }
 
     }
