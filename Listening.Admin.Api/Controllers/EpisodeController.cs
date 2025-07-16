@@ -3,6 +3,7 @@ using FluentValidation;
 using Identity.Api;
 using Listening.Admin.Api.Attributes;
 using Listening.Admin.Api.Dtos.Request;
+using Listening.Admin.Api.Dtos.Response;
 using Listening.Domain.Entities;
 using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
@@ -11,38 +12,43 @@ using Listening.Infrastructure.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Listening.Admin.Api.Controllers
 {
 
     [Authorize]
+    // [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class EpisodeController(
-           IEpisodeRepository repository,
-           EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
+         IEpisodeRepository repository,
+         EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
     {
 
         [HttpGet("{id}")]
         [PermissionKey("Episode.List")]
-        public async Task<ActionResult<ApiResponse<Episode?>>> FindById(long id)
+        public async Task<ActionResult<ApiResponse<EpisodeResponseDto?>>> FindById(long id)
         {
-            var info = await repository.GetByIdAsync(id);
-            //just for admin use,return All album info
-            return Ok(ApiResponse<Episode?>.Ok(info));
+            var query = repository.Query().Where(t => t.Id == id);
+
+            var res = await query.Select(t => EpisodeResponseDto.ToDto(t, false)).FirstOrDefaultAsync();
+            return Ok(ApiResponse<EpisodeResponseDto?>.Ok(res));
         }
 
         [HttpGet("ListByAlbum/{albumId}")]
         [PermissionKey("Episode.List")]
-        public async Task<ActionResult<ApiResponse<List<Episode>>>> FindByAlbumId(long albumId)
+        public async Task<ActionResult<ApiResponse<List<EpisodeResponseDto>>>> FindByAlbumId(long albumId)
         {
-            var info = await repository.GetAllByAlumIdAsync(albumId);
+            var query = repository.Query().Where(t => t.AlbumId == albumId);
 
-            return Ok(ApiResponse<List<Episode>>.Ok(info));
+
+            var res = await query.Select(t => EpisodeResponseDto.ToDto(t, true)).ToListAsync();
+            return Ok(ApiResponse<List<EpisodeResponseDto>>.Ok(res));
         }
         [HttpGet("Pagination")]
         [PermissionKey("Episode.List")]
-        public async Task<ActionResult<ApiResponse<PaginationResponse<Episode>>>> Pagination(long albumId = 0, string title = "", int pageIndex = 1, int pageSize = 10)
+        public async Task<ActionResult<ApiResponse<PaginationResponse<EpisodeResponseDto>>>> Pagination(long albumId = 0, string title = "", int pageIndex = 1, int pageSize = 10)
         {
             var query = repository.Query();
 
@@ -55,7 +61,7 @@ namespace Listening.Admin.Api.Controllers
                 query = query.Where(t => t.Title.Contains(title.Trim()));
             }
 
-            var res = await query.ToPaginationResponseAsync(pageIndex, pageSize);
+            var res = await query.Select(t => EpisodeResponseDto.ToDto(t, true)).ToPaginationResponseAsync(pageIndex, pageSize);
 
             return this.OkResponse(res);
         }
@@ -64,9 +70,9 @@ namespace Listening.Admin.Api.Controllers
         public async Task<ActionResult<ApiResponse<BaseResponse>>> Add(AddEpisodeRequestDto dto)
         {
             await ValidationHelper.ValidateModelAsync(dto, validator);
-            
+
             var info = await domainService.AddAsync(dto.AlbumId, dto.Title, dto.SubtitleType, dto.SubtitleContent, dto.AudioUrl, dto.DurationInSeconds, dto.CoverImgUrl);
-        
+
             return Ok(ApiResponse<long>.Ok(info.Id));
         }
 
@@ -102,7 +108,7 @@ namespace Listening.Admin.Api.Controllers
             }
             info.ChangeTitle(dto.Title);
 
-             return this.OkResponse(id);
+            return this.OkResponse(id);
         }
 
         [HttpDelete("{id}")]
@@ -116,7 +122,7 @@ namespace Listening.Admin.Api.Controllers
             }
             album.SoftDelete(currentUser);
 
-             return this.OkResponse(id);
+            return this.OkResponse(id);
         }
 
         [HttpPut("Hide/{id}")]
@@ -130,7 +136,7 @@ namespace Listening.Admin.Api.Controllers
             }
             album.Hide();
 
-             return this.OkResponse(id);
+            return this.OkResponse(id);
         }
 
         [HttpPut("Show/{id}")]
@@ -144,7 +150,7 @@ namespace Listening.Admin.Api.Controllers
             }
             album.Show();
 
-             return this.OkResponse(id);
+            return this.OkResponse(id);
         }
 
         [HttpPut("Sort/{albumId}")]
@@ -153,7 +159,7 @@ namespace Listening.Admin.Api.Controllers
         {
             await domainService.SortAsync(albumId, req.Ids);
 
-             return this.OkResponse(albumId);
+            return this.OkResponse(albumId);
         }
     }
 }

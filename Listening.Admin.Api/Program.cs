@@ -14,6 +14,7 @@ namespace Listening.Admin.Api
             // Add services to the container.
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddScoped<PermissionCheckHelper>();
+
             var app = builder.Build();
             app.UseRouting();
             app.UseCors("AllowAll");
@@ -21,20 +22,21 @@ namespace Listening.Admin.Api
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+
+               // app.Urls.Add($"http://*:5017");
                 app.UseSwagger();
                 app.UseSwaggerUI();
 
-                app.Urls.Add($"http://*:5017");
             }
-         /*   else
-            {
-                var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-                app.Urls.Add($"http://*:{port}");
+            /*   else
+               {
+                   var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+                   app.Urls.Add($"http://*:{port}");
 
-               
-            }*/
 
-          //  app.UseHttpsRedirection();
+               }*/
+
+            //  app.UseHttpsRedirection();
 
             app.UseAuthorization();
 

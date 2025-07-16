@@ -23,8 +23,4 @@
     <ProjectReference Include="..\Listening.Infrastructure\Listening.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\Response\" />
-  </ItemGroup>
-
 </Project>
