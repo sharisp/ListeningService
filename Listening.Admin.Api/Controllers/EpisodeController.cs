@@ -27,7 +27,7 @@ namespace Listening.Admin.Api.Controllers
     {
 
         [HttpGet("{id}")]
-        [PermissionKey("Episode.List")]
+        [PermissionKey("Episode.FindById")]
         public async Task<ActionResult<ApiResponse<EpisodeResponseDto?>>> FindById(long id)
         {
             var query = repository.Query().Where(t => t.Id == id);
