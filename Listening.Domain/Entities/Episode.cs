@@ -1,4 +1,5 @@
-﻿using Listening.Domain.Helper;
+﻿using Domain.SharedKernel.HelperFunctions;
+using Listening.Domain.Helper;
 using Listening.Domain.Subtitles;
 using Listening.Domain.ValueObjects;
 
@@ -52,7 +53,10 @@ namespace Listening.Domain.Entities
         {
             this.SubtitleContent = ParseSubtitleStr(subtitleType, subtitleContent, durationSeconds);
         }
-
+        public string GetEncodedSubtitle()
+        {            
+            return Base64Helper.Encode(this.SubtitleContent);
+        }
 
     }
 }
