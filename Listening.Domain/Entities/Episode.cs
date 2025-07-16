@@ -46,6 +46,7 @@ namespace Listening.Domain.Entities
             {
                 return subtitleContent;
             }
+            
             return ParseSubtitle(subtitleType, subtitleContent, durationSeconds).ToJsonString();
         }
 

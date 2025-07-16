@@ -38,8 +38,16 @@ namespace Listening.Domain.Subtitles
             //last line
             var lastLine = lines.Last();
             TimeSpan lastLineStartTime = lastLine.Timestamp.TimeOfDay;
-           
-            TimeSpan lastLineEndTime = sentences[0].StartTime.Add(TimeSpan.FromSeconds(durationSeconds));
+            TimeSpan lastLineEndTime;
+            if (durationSeconds>0)            {
+
+                 lastLineEndTime = sentences[0].StartTime.Add(TimeSpan.FromSeconds(durationSeconds));
+            }
+            else
+            {
+
+                 lastLineEndTime = lastLineStartTime.Add(TimeSpan.FromMinutes(1));
+            }
             var lastSentence = new Sentence(lastLineStartTime, lastLineEndTime, lastLine.Content);
             sentences[sentences.Count() - 1] = lastSentence;
 
