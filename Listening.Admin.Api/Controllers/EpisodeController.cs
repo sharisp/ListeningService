@@ -23,7 +23,7 @@ namespace Listening.Admin.Api.Controllers
     [ApiController]
     public class EpisodeController(
          IEpisodeRepository repository,
-         EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
+         EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator, IValidator<UpdateEpisodeRequestDto> editValidator) : ControllerBase
     {
 
         [HttpGet("{id}")]
@@ -78,9 +78,9 @@ namespace Listening.Admin.Api.Controllers
 
         [HttpPut("{id}")]
         [PermissionKey("Episode.Update")]
-        public async Task<ActionResult<ApiResponse<BaseResponse>>> Update(long id, UpdateRequestDto dto)
+        public async Task<ActionResult<ApiResponse<BaseResponse>>> Update(long id, UpdateEpisodeRequestDto dto)
         {
-            await ValidationHelper.ValidateModelAsync(dto, updateValidator);
+            await ValidationHelper.ValidateModelAsync(dto, editValidator);
             var info = await repository.GetByIdAsync(id);
             if (info == null)
             {
@@ -88,10 +88,13 @@ namespace Listening.Admin.Api.Controllers
             }
             info.ChangeTitle(dto.Title);
             info.ChangeSequenceNumber(dto.SequenceNumber);
+
             if (dto.CoverImgUrl != null)
             {
                 info.ChangeCoverImgUrl(dto.CoverImgUrl);
             }
+            info.ChangeAudioUrl(dto.AudioUrl);
+            info.ChangeSubtitleContent(dto.SubtitleType, dto.SubtitleContent, 0);
 
 
             return this.OkResponse(id);

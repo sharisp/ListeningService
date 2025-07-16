@@ -15,10 +15,21 @@ namespace Listening.Domain.Entities
 
         private Episode() { }
 
-
+        public void ChangeAudioUrl(Uri audioUrl)
+        {
+            this.AudioUrl = audioUrl;
+        }
         public void ChangeAlbumId(long albumId)
         {
             this.AlbumId = albumId;
+        }
+        public void ChangeDurationInSeconds(long durationInSeconds)
+        {
+            this.DurationInSeconds = durationInSeconds;
+        }
+        public void ChangeSubtitleContent(string subtitleType, string subtitleContent, long durationInSeconds)
+        {
+            this.SubtitleContent = ParseSubtitleStr(subtitleType, subtitleContent, durationInSeconds);
         }
         public Episode(long alumId, string title, string subtitleType, string subtitleContent, Uri audioUrl, long durationInSeconds, int sequenceNumber, Uri? coverImgUrl) : base(title, sequenceNumber, coverImgUrl, true)
         {
@@ -42,11 +53,11 @@ namespace Listening.Domain.Entities
         public string ParseSubtitleStr(string subtitleType, string subtitleContent, long durationSeconds)
         {
             //correct subtitleContent,just return it
-            if (subtitleType=="json")
+            if (subtitleType == "json")
             {
                 return subtitleContent;
             }
-            
+
             return ParseSubtitle(subtitleType, subtitleContent, durationSeconds).ToJsonString();
         }
 
@@ -55,7 +66,7 @@ namespace Listening.Domain.Entities
             this.SubtitleContent = ParseSubtitleStr(subtitleType, subtitleContent, durationSeconds);
         }
         public string GetEncodedSubtitle()
-        {            
+        {
             return Base64Helper.Encode(this.SubtitleContent);
         }
 

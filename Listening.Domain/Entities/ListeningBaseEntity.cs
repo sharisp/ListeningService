@@ -4,7 +4,7 @@ namespace Listening.Domain.Entities
 {
     public class ListeningBaseEntity : BaseAuditableEntity
     {
-        public int SequenceNumber { get;  set; }
+        public int SequenceNumber { get; set; }
         public string Title { get; private set; }
         public Uri? CoverImgUrl { get; private set; }
 
@@ -31,7 +31,14 @@ namespace Listening.Domain.Entities
         {
             this.CoverImgUrl = coverImgUrl;
         }
-        protected ListeningBaseEntity(){}
+      
+        public void ChangeIsShow(bool isShow)
+        {
+            this.IsShow = isShow;
+        }
+
+
+        protected ListeningBaseEntity() { }
         public ListeningBaseEntity(string title, int sequenceNumber, Uri? coverImgUrl = null, bool isShow = true)
         {
             this.Title = title;

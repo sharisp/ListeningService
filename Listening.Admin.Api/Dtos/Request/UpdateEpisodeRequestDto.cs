@@ -2,7 +2,7 @@
 
 namespace Listening.Admin.Api.Dtos.Request
 {
-    public class AddEpisodeRequestDto
+    public class UpdateEpisodeRequestDto
     {
         public long AlbumId { get; set; }
         public string Title { get; set; }
@@ -11,11 +11,12 @@ namespace Listening.Admin.Api.Dtos.Request
         public Uri AudioUrl { get; set; }
         public long DurationInSeconds { get; set; }
         public Uri? CoverImgUrl { get; set; }
-
+        public int SequenceNumber { get; set; }
     }
-    public class AddEpisodeRequestDtoValidator : AbstractValidator<AddEpisodeRequestDto>
+
+    public class UpdateEpisodeRequestDtoValidator : AbstractValidator<UpdateEpisodeRequestDto>
     {
-        public AddEpisodeRequestDtoValidator()
+        public UpdateEpisodeRequestDtoValidator()
         {
 
             RuleFor(x => x.Title)
@@ -29,8 +30,9 @@ namespace Listening.Admin.Api.Dtos.Request
                 .NotEmpty().WithMessage("SubtitleContent is required.");
             RuleFor(x => x.AudioUrl)
                 .NotEmpty().WithMessage("AudioUrl is required.");
-       
-           
+            RuleFor(x => x.SequenceNumber)
+             .NotEmpty().WithMessage("SequenceNumber is required.");
+
         }
     }
 }
