@@ -17,13 +17,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Listening.Admin.Api.Controllers
 {
 
-   // [Authorize]
-    [AllowAnonymous]
+    [Authorize]
+    // [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class EpisodeController(
-         IEpisodeRepository repository,
-         EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator, IValidator<UpdateEpisodeRequestDto> editValidator) : ControllerBase
+          IEpisodeRepository repository,
+          EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator, IValidator<UpdateEpisodeRequestDto> editValidator) : ControllerBase
     {
 
         [HttpGet("{id}")]
