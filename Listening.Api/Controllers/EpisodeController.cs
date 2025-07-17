@@ -36,7 +36,7 @@ namespace Listening.Api.Controllers
                     CoverImgUrl = t.CoverImgUrl,
                     DurationInSeconds = t.DurationInSeconds,
                     Id = t.Id,
-                    SubtitleContent =Base64Helper.Encode(t.SubtitleContent),
+                    SubtitleContent = SubtitleEncodeHelper.EncodeSubtitle(t.SubtitleContent),
                     Title = t.Title
                 }).FirstOrDefaultAsync();
                 return episode;

@@ -17,8 +17,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Listening.Admin.Api.Controllers
 {
 
-    [Authorize]
-    // [AllowAnonymous]
+   // [Authorize]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class EpisodeController(
