@@ -8,6 +8,7 @@ using Listening.Domain.Entities;
 using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Listening.Api.Controllers
 {
@@ -31,6 +32,21 @@ namespace Listening.Api.Controllers
             return Ok(ApiResponse<BaseEntityResponseDto?>.Ok(dto));
         }
 
+        [HttpGet("List")]
+        public async Task<ActionResult<ApiResponse<List<BaseEntityResponseDto>>>> List()
+        {
+            var responseDtos = await memoryCacheHelper.GetOrCreateAsync<List<BaseEntityResponseDto>>($"CategoryController_List" , async entry =>
+            {
+                var categories = await repository.Query().Where(t=>t.IsShow==true).ToListAsync();
+                var dtos = new List<BaseEntityResponseDto>();
+                foreach (var item in categories.Where(t => t.IsShow == true))
+                {
+                    dtos.Add(mapper.ToDto(item));
+                }
+                return dtos;
+            });
+            return Ok(ApiResponse<List<BaseEntityResponseDto>>.Ok(responseDtos));
+        }
         [HttpGet("ListByKind/{kindId}")]
         public async Task<ActionResult<ApiResponse<List<BaseEntityResponseDto>>>> FindByKindId(long kindId)
         {
