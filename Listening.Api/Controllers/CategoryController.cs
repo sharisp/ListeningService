@@ -37,7 +37,7 @@ namespace Listening.Api.Controllers
         {
             var responseDtos = await memoryCacheHelper.GetOrCreateAsync<List<BaseEntityResponseDto>>($"CategoryController_List" , async entry =>
             {
-                var categories = await repository.Query().Where(t=>t.IsShow==true).ToListAsync();
+                var categories = await repository.Query().Where(t=>t.IsShow==true).OrderBy(t=>t.SequenceNumber).ToListAsync();
                 var dtos = new List<BaseEntityResponseDto>();
                 foreach (var item in categories.Where(t => t.IsShow == true))
                 {

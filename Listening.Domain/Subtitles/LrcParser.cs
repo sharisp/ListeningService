@@ -41,7 +41,7 @@ namespace Listening.Domain.Subtitles
             TimeSpan lastLineEndTime;
             if (durationSeconds>0)            {
 
-                 lastLineEndTime = sentences[0].StartTime.Add(TimeSpan.FromSeconds(durationSeconds));
+                 lastLineEndTime = TimeSpan.FromSeconds(durationSeconds);
             }
             else
             {
