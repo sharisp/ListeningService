@@ -19,7 +19,7 @@ namespace Listening.Infrastructure.Config
 
             builder.HasIndex(e => new { e.KindId, e.IsDel });
             builder.Property(e => e.Id).ValueGeneratedNever();
-            builder.Property(e => e.Title).HasMaxLength(500).IsUnicode(false).IsRequired();
+            builder.Property(e => e.Title).HasMaxLength(500).IsUnicode(true).IsRequired();
         }
     }
 }

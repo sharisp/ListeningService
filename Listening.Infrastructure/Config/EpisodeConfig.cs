@@ -19,7 +19,7 @@ namespace Listening.Infrastructure.Config
             builder.HasKey(e => e.Id);
             builder.HasIndex(e => new { e.AlbumId, e.IsDel });
             builder.Property(e => e.Id).ValueGeneratedNever();
-            builder.Property(e => e.Title).HasMaxLength(500).IsUnicode(false).IsRequired();
+            builder.Property(e => e.Title).HasMaxLength(500).IsUnicode(true).IsRequired();
             builder.Property(e => e.AudioUrl).HasMaxLength(1000).IsUnicode().IsRequired();
             builder.Property(e => e.SubtitleContent).HasMaxLength(int.MaxValue).IsUnicode().IsRequired();
          
