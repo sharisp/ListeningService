@@ -20,10 +20,9 @@ namespace Listening.Admin.Api.Dtos.Request
                 .NotEmpty().WithMessage("Title is required.")
                 .Length(1, 500);
 
-            RuleFor(x => x.SequenceNumber)
-                .NotEmpty().WithMessage("SequenceNumber is required.");
+            RuleFor(x => x.SequenceNumber).GreaterThanOrEqualTo(0).WithMessage("SequenceNumber must be 0 or greater.");
 
-         
+
         }
     }
 }
