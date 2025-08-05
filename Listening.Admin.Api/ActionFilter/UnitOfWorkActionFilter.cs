@@ -20,7 +20,7 @@ public class UnitOfWorkActionFilter : IAsyncActionFilter
 
         var resultContext = await next();
 
-        // 仅对非 GET 请求调用 SaveChanges
+        // for non-GET requests, commit the UnitOfWork
         if (!string.Equals(httpMethod, "GET", StringComparison.OrdinalIgnoreCase) && resultContext.Exception == null)
         {
             try
