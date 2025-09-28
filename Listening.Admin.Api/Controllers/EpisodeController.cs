@@ -9,6 +9,7 @@ using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
 using Listening.Infrastructure.Extensions;
 using Listening.Infrastructure.Options;
+using Listening.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,14 +24,14 @@ namespace Listening.Admin.Api.Controllers
     [ApiController]
     public class EpisodeController(
           IEpisodeRepository repository,
-          EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator, IValidator<UpdateEpisodeRequestDto> editValidator) : ControllerBase
+          EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator, IValidator<UpdateEpisodeRequestDto> editValidator, CommonQuery commonQuery) : ControllerBase
     {
 
         [HttpGet("{id}")]
         [PermissionKey("Episode.FindById")]
         public async Task<ActionResult<ApiResponse<EpisodeResponseDto?>>> FindById(long id)
         {
-            var query = repository.Query().Where(t => t.Id == id);
+            var query = commonQuery.ApplyQueryWithPermission<Episode>().Where(t => t.Id == id);
 
             var res = await query.Select(t => EpisodeResponseDto.ToDto(t, false)).FirstOrDefaultAsync();
             return Ok(ApiResponse<EpisodeResponseDto?>.Ok(res));
@@ -40,8 +41,7 @@ namespace Listening.Admin.Api.Controllers
         [PermissionKey("Episode.List")]
         public async Task<ActionResult<ApiResponse<List<EpisodeResponseDto>>>> FindByAlbumId(long albumId)
         {
-            var query = repository.Query().Where(t => t.AlbumId == albumId);
-
+            var query = commonQuery.ApplyQueryWithPermission<Episode>().Where(t => t.AlbumId == albumId);
 
             var res = await query.Select(t => EpisodeResponseDto.ToDto(t, true)).ToListAsync();
             return Ok(ApiResponse<List<EpisodeResponseDto>>.Ok(res));
@@ -50,7 +50,7 @@ namespace Listening.Admin.Api.Controllers
         [PermissionKey("Episode.List")]
         public async Task<ActionResult<ApiResponse<PaginationResponse<EpisodeResponseDto>>>> Pagination(long albumId = 0, string title = "", int pageIndex = 1, int pageSize = 10)
         {
-            var query = repository.Query();
+            var query = commonQuery.ApplyQueryWithPermission<Episode>();
 
             if (albumId > 0)
             {

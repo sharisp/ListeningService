@@ -8,9 +8,11 @@ using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
 using Listening.Infrastructure.Extensions;
 using Listening.Infrastructure.Options;
+using Listening.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Listening.Admin.Api.Controllers
 {
@@ -19,14 +21,14 @@ namespace Listening.Admin.Api.Controllers
     [ApiController]
     public class CategoryController(
            ICategoryRepository repository,
-           CategoryDomainService domainService, ICurrentUser currentUser, IValidator<CategoryRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
+           CategoryDomainService domainService, ICurrentUser currentUser, IValidator<CategoryRequestDto> validator, IValidator<UpdateRequestDto> updateValidator,CommonQuery commonQuery) : ControllerBase
     {
 
         [HttpGet("{id}")]
         [PermissionKey("Category.List")]
         public async Task<ActionResult<ApiResponse<Category?>>> FindById(long id)
         {
-            var info = await repository.GetByIdAsync(id);
+            var info = await commonQuery.ApplyQueryWithPermission<Category>().FirstOrDefaultAsync(t=>t.Id==id);
             //just for admin use,return All album info
             return Ok(ApiResponse<Category?>.Ok(info));
         }
@@ -34,7 +36,7 @@ namespace Listening.Admin.Api.Controllers
         [PermissionKey("Category.List")]
         public async Task<ActionResult<ApiResponse<PaginationResponse<Category>>>> Pagination(long kindId=0, string title = "", int pageIndex = 1, int pageSize = 10)
         {
-            var query = repository.Query();
+            var query = commonQuery.ApplyQueryWithPermission<Category>();
 
             if (kindId > 0)
             {
@@ -52,7 +54,7 @@ namespace Listening.Admin.Api.Controllers
         [PermissionKey("Category.List")]
         public async Task<ActionResult<ApiResponse<List<Category>>>> FindByKindId(long kindId)
         {
-            var info = await repository.GetAllByKindIdAsync(kindId);
+            var info = await commonQuery.ApplyQueryWithPermission<Category>().Where(t=>t.KindId==kindId).ToListAsync();
 
             return Ok(ApiResponse<List<Category>>.Ok(info));
         }

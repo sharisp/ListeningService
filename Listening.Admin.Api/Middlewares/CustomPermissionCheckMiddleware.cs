@@ -2,6 +2,7 @@
 using Infrastructure.SharedKernel;
 using Listening.Admin.Api.Attributes;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security;
 using System.Security.Claims;
@@ -58,7 +59,8 @@ public class CustomPermissionCheckMiddleware(
                 //await JsonSerializer.SerializeAsync(stream, res);
                 return;
             }
-
+            context.Items["CurrentUserId"] = Convert.ToInt64(userId);
+        
 
             //check permission key
             var permissionKey = endpoint.Metadata

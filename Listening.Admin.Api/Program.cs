@@ -1,5 +1,6 @@
 using Listening.Admin.Api.Middlewares;
 using Listening.Infrastructure;
+using Listening.Infrastructure.Extensions;
 using Listening.Infrastructure.Helper;
 using Microsoft.AspNetCore.Authorization;
 
@@ -16,6 +17,7 @@ namespace Listening.Admin.Api
             builder.Services.AddScoped<PermissionCheckHelper>();
 
             var app = builder.Build();
+            QueryablePermissionExtensions.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
             app.UseRouting();
             app.UseCors("AllowAll");
             app.UseMiddleware<CustomerExceptionMiddleware>();
@@ -44,6 +46,7 @@ namespace Listening.Admin.Api
             app.MapControllers();
 
             app.UseMiddleware<CustomPermissionCheckMiddleware>();
+            app.UseMiddleware<CustomDataPermissionMiddleware>();
             app.Run();
         }
     }

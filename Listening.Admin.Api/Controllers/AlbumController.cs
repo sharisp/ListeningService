@@ -8,9 +8,11 @@ using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
 using Listening.Infrastructure.Extensions;
 using Listening.Infrastructure.Options;
+using Listening.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Listening.Admin.Api.Controllers
 {
@@ -19,14 +21,14 @@ namespace Listening.Admin.Api.Controllers
     [ApiController]
     public class AlbumController(
             IAlbumRepository repository,
-            AlbumDomainService domainService, ICurrentUser currentUser, IValidator<AlbumRequestDto> validator, IValidator<UpdateRequestDto> updateValidator) : ControllerBase
+            AlbumDomainService domainService, ICurrentUser currentUser, IValidator<AlbumRequestDto> validator, IValidator<UpdateRequestDto> updateValidator,CommonQuery commonQuery) : ControllerBase
     {
 
         [HttpGet("{id}")]
         [PermissionKey("Album.List")]
         public async Task<ActionResult<ApiResponse<Album?>>> FindById(long id)
         {
-            var album = await repository.GetByIdAsync(id);
+            var album = await commonQuery.ApplyQueryWithPermission<Album>().FirstOrDefaultAsync(t=>t.Id==id);
             //just for admin use,return All album info
             return this.OkResponse(album);
         }
@@ -35,7 +37,7 @@ namespace Listening.Admin.Api.Controllers
         [PermissionKey("Album.List")]
         public async Task<ActionResult<ApiResponse<List<Album>>>> FindByCategoryId(long categoryId)
         {
-            var albums = await repository.GetAllByCategoryIdAsync(categoryId);
+            var albums = await commonQuery.ApplyQueryWithPermission<Album>().Where(t=>t.CategoryId==categoryId).ToListAsync();
 
             return this.OkResponse(albums);
         }
@@ -44,7 +46,7 @@ namespace Listening.Admin.Api.Controllers
         [PermissionKey("Album.List")]
         public async Task<ActionResult<ApiResponse<PaginationResponse<Album>>>> Pagination(long categoryId = 0, string title = "", int pageIndex = 1, int pageSize = 10)
         {
-            var query = repository.Query();
+            var query = commonQuery.ApplyQueryWithPermission<Album>();
 
             if (categoryId > 0)
             {
