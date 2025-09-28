@@ -1,6 +1,7 @@
 ﻿using IdGen;
 using Listening.Domain.Entities;
 using Listening.Domain.Interfaces;
+using Listening.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,15 +19,14 @@ namespace Listening.Infrastructure.Repository
         {
             this.dbContext = dbContext;
         }
-        public IQueryable<Kind> Query()
+       /* public IQueryable<Kind> Query()
         {
             var query = dbContext.Kinds.AsQueryable();
 
             return query;
-        }
+        }*/
         public void Add(Kind model)
         {
-
             dbContext.Kinds.Add(model);
         }
 

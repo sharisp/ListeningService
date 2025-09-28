@@ -1,5 +1,6 @@
 ﻿using Infrastructure.SharedKernel;
 using Listening.Domain.Entities;
+using Listening.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -8,6 +9,7 @@ namespace Listening.Infrastructure.Repository
     public class AppDbContext : BaseDbContext
     {
         // 不能直接用DbContextOptions options
+      
 
         public AppDbContext(DbContextOptions options )
             : base(options)

@@ -19,12 +19,7 @@ namespace Listening.Infrastructure.Repository
         {
             this.dbContext = dbContext;
         }
-        public IQueryable<Album> Query()
-        {
-            var query = dbContext.Albums.AsQueryable();
-           
-            return query;
-        }
+       
         public void Add(Album model)
         {
             dbContext.Albums.Add(model);
