@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <Folder Include="Events\" />
+    <Folder Include="Options\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Andrew.Domain.SharedKernel" Version="1.1.5" />
+    <PackageReference Include="Andrew.Domain.SharedKernel" Version="1.1.7" />
     <PackageReference Include="Opportunity.LrcParser" Version="1.0.4" />
     <PackageReference Include="SubtitlesParser" Version="1.5.1" />
   </ItemGroup>

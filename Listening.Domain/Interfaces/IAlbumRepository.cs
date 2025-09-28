@@ -9,7 +9,6 @@ namespace Listening.Domain.Interfaces
 {
     public interface IAlbumRepository
     {
-        IQueryable<Album> Query();
         Task<List<Album>> GetAllByCategoryIdAsync(long categoryId);
 
         void Add(Album model);

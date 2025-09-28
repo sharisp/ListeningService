@@ -9,7 +9,7 @@ namespace Listening.Domain.Interfaces
 {
     public interface IKindRepository
     {
-        IQueryable<Kind> Query();
+       // IQueryable<Kind> Query();
         void Add(Kind model);
         Task<List<Kind>> GetAllAsync();
         Task<Kind?> GetByIdAsync(long id);
