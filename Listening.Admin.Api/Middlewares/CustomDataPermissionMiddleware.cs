@@ -19,8 +19,19 @@ public class CustomDataPermissionMiddleware(
     {
         try
         {
+            if (AppHelper.ReadAppSettingsSection<bool>("Enable:DataPermission")==false)
+            {
+                await next(context);
+                return;
+            }  
             if (context == null) throw new ArgumentNullException(nameof(context));
-            var rolIds =Convert.ToString(context?.User.FindFirstValue("RoleIds")).Split(',');
+            var rolIdstr = context?.User.FindFirstValue("RoleIds");
+            if (string.IsNullOrEmpty(rolIdstr))
+            {
+                await next(context);
+                return;
+            }
+            var rolIds = rolIdstr.Split(',');
             List<RowPermissionList> rowPermissions = new List<RowPermissionList>();
             if (rolIds != null && rolIds.Any())
             {
