@@ -20,7 +20,7 @@ public class CustomDataPermissionMiddleware(
         try
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            var rolIds = context?.User.FindAll("RoleId");
+            var rolIds =Convert.ToString(context?.User.FindFirstValue("RoleIds")).Split(',');
             List<RowPermissionList> rowPermissions = new List<RowPermissionList>();
             if (rolIds != null && rolIds.Any())
             {
@@ -31,7 +31,7 @@ public class CustomDataPermissionMiddleware(
                 {
                     var dataPermissionBlackList = await memoryCacheHelper.GetOrCreateAsync<DataPermission?>($"DataPermission_Role" + roleId, async entry =>
                     {
-                        return await permissionHelper.QueryDataPermissionBlackList(Convert.ToInt64(roleId.Value));
+                        return await permissionHelper.QueryDataPermissionBlackList(Convert.ToInt64(roleId));
 
                     }, 5 * 60);
                     if (dataPermissionBlackList != null)
