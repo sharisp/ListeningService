@@ -1,4 +1,5 @@
 ﻿using Domain.SharedKernel.HelperFunctions;
+using Listening.Domain.Enums;
 using Listening.Domain.Helper;
 using Listening.Domain.Subtitles;
 using Listening.Domain.ValueObjects;
@@ -12,6 +13,7 @@ namespace Listening.Domain.Entities
         public string SubtitleContent { get; private set; }
         public Uri AudioUrl { get; private set; }
         public long DurationInSeconds { get; private set; }
+        public AISubtitleStatusEnum AISubtitleStatus { get; private set; } = AISubtitleStatusEnum.Waiting;
 
         private Episode() { }
 
@@ -27,6 +29,10 @@ namespace Listening.Domain.Entities
         {
             this.AlbumId = albumId;
         }
+        public void ChangeAISubtitleStatus(AISubtitleStatusEnum status)
+        {
+            this.AISubtitleStatus = status;
+        }
         public void ChangeDurationInSeconds(long durationInSeconds)
         {
             this.DurationInSeconds = durationInSeconds;
@@ -35,13 +41,26 @@ namespace Listening.Domain.Entities
         {
             this.SubtitleContent = ParseSubtitleStr(subtitleType, subtitleContent, durationInSeconds);
         }
-        public Episode(long alumId, string title, string subtitleType, string subtitleContent, Uri audioUrl, long durationInSeconds, int sequenceNumber, Uri? coverImgUrl) : base(title, sequenceNumber, coverImgUrl, true)
+        public Episode(long alumId, string title, string subtitleType, string subtitleContent, Uri audioUrl, long durationInSeconds, int sequenceNumber, Uri? coverImgUrl) : base(title, sequenceNumber, coverImgUrl, false)
         {
 
             this.AlbumId = alumId;
-            this.SubtitleContent = ParseSubtitleStr(subtitleType, subtitleContent, durationInSeconds);
+
+            if (subtitleType=="AI_Generate")
+            {
+
+                this.AISubtitleStatus = AISubtitleStatusEnum.Waiting;
+              
+            }
+            else
+            {
+                this.AISubtitleStatus = AISubtitleStatusEnum.Manual;
+                this.SubtitleContent = ParseSubtitleStr(subtitleType, subtitleContent, durationInSeconds);
+            }
+
             this.AudioUrl = audioUrl;
             this.DurationInSeconds = durationInSeconds;
+
             AddDomainEvent(new Events.AddEpisodeEvent(this));
 
         }
