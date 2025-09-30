@@ -18,6 +18,10 @@ namespace Listening.Domain.Entities
         public void ChangeAudioUrl(Uri audioUrl)
         {
             this.AudioUrl = audioUrl;
+            if (audioUrl != this.AudioUrl)
+            {
+                AddDomainEvent(new Events.UpdateAudioUrlEvent(this));
+            }
         }
         public void ChangeAlbumId(long albumId)
         {
@@ -38,6 +42,7 @@ namespace Listening.Domain.Entities
             this.SubtitleContent = ParseSubtitleStr(subtitleType, subtitleContent, durationInSeconds);
             this.AudioUrl = audioUrl;
             this.DurationInSeconds = durationInSeconds;
+            AddDomainEvent(new Events.AddEpisodeEvent(this));
 
         }
 
