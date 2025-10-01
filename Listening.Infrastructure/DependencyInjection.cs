@@ -1,8 +1,11 @@
 ﻿using CSRedis;
+using EasyNetQ;
 using Infrastructure.SharedKernel;
 using Listening.Domain;
 using Listening.Domain.Interfaces;
+using Listening.Infrastructure.EventHandlers;
 using Listening.Infrastructure.Helper;
+using Listening.Infrastructure.Options;
 using Listening.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +34,26 @@ namespace Listening.Infrastructure
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IKindRepository, KindRepository>();
             services.AddScoped<IEpisodeRepository, EpisodeRepository>();
+
+
+
+
+            // EasyNetQ IBus 
+            var rabbitMqOptions = configuration.GetSection("RabbitMq").Get<RabbitMqOptions>();
+            if (rabbitMqOptions!=null)
+            {
+
+                services.AddScoped<EpisodeAddEventHandler>();
+                //  EasyNetQ  IBus
+                services.AddEasyNetQ($"host={rabbitMqOptions.Host}:{rabbitMqOptions.Port};" +
+                          $"username={rabbitMqOptions.UserName};" +
+                          $"password={rabbitMqOptions.Password};" +
+                          $"virtualHost={rabbitMqOptions.VirtualHost}").UseSystemTextJson();
+            }
+
+
+
+
             return services;
         }
     }

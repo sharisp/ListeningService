@@ -14,6 +14,8 @@
   <ItemGroup>
     <PackageReference Include="Andrew.Infrastructure.SharedKernel" Version="1.1.0" />
     <PackageReference Include="CSRedisCore" Version="3.8.804" />
+    <PackageReference Include="EasyNetQ" Version="8.0.0-beta99" />
+    <PackageReference Include="EasyNetQ.Serialization.SystemTextJson" Version="8.0.0-beta99" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,6 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.6" />
   </ItemGroup>
 
