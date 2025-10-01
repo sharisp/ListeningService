@@ -50,7 +50,7 @@ namespace Listening.Domain.Entities
             {
 
                 this.AISubtitleStatus = AISubtitleStatusEnum.Waiting;
-              
+                this.SubtitleContent = "";
             }
             else
             {
