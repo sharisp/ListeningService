@@ -43,7 +43,6 @@ namespace Listening.Infrastructure
             if (rabbitMqOptions!=null)
             {
 
-                services.AddScoped<EpisodeAddEventHandler>();
                 //  EasyNetQ  IBus
                 services.AddEasyNetQ($"host={rabbitMqOptions.Host}:{rabbitMqOptions.Port};" +
                           $"username={rabbitMqOptions.UserName};" +

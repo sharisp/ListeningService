@@ -4,6 +4,7 @@ using FluentValidation;
 using Infrastructure.SharedKernel;
 using Listening.Admin.Api.ActionFilter;
 using Listening.Admin.Api.Helpers;
+using Listening.Infrastructure.EventHandlers;
 using Listening.Infrastructure.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,22 +50,23 @@ namespace Listening.Admin.Api
             services.AddEndpointsApiExplorer();
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
               typeof(IUnitOfWork).Assembly,
-              Assembly.GetExecutingAssembly()
-             // typeof(AlbumController).Assembly //
+              Assembly.GetExecutingAssembly(),
+    typeof(EpisodeAddEventHandler).Assembly
+          // typeof(AlbumController).Assembly //
           ));
-         
 
-          //  services.AddScoped<RowPermissionInterceptor>();
+
+            //  services.AddScoped<RowPermissionInterceptor>();
 
             services.AddDbContext<AppDbContext>((sp, opt) =>
             {
-               // var interceptor = sp.GetRequiredService<RowPermissionInterceptor>();
+                // var interceptor = sp.GetRequiredService<RowPermissionInterceptor>();
                 opt.UseSqlServer(configuration.GetConnectionString("SqlServer"));
-                  // .AddInterceptors(interceptor);
+                // .AddInterceptors(interceptor);
             });
 
             services.AddScoped<BaseDbContext>(sp => sp.GetRequiredService<AppDbContext>());
-         
+
             services.AddHttpContextAccessor(); //for accessing HttpContext in services IHttpContextAccessor
             services.AddSwaggerGen();
             services.AddJWTAuthentication(configuration);
