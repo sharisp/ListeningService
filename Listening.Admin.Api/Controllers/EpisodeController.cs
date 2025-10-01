@@ -5,6 +5,7 @@ using Listening.Admin.Api.Attributes;
 using Listening.Admin.Api.Dtos.Request;
 using Listening.Admin.Api.Dtos.Response;
 using Listening.Domain.Entities;
+using Listening.Domain.Enums;
 using Listening.Domain.Interfaces;
 using Listening.Domain.Services;
 using Listening.Infrastructure.Extensions;
@@ -19,12 +20,12 @@ namespace Listening.Admin.Api.Controllers
 {
 
     [Authorize]
-    // [AllowAnonymous]
+    //[AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class EpisodeController(
-          IEpisodeRepository repository,
-          EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator, IValidator<UpdateEpisodeRequestDto> editValidator, CommonQuery commonQuery) : ControllerBase
+         IEpisodeRepository repository,
+         EpisodeDomainService domainService, ICurrentUser currentUser, IValidator<AddEpisodeRequestDto> validator, IValidator<UpdateRequestDto> updateValidator, IValidator<UpdateEpisodeRequestDto> editValidator, CommonQuery commonQuery) : ControllerBase
     {
 
         [HttpGet("{id}")]
@@ -74,6 +75,24 @@ namespace Listening.Admin.Api.Controllers
             var info = await domainService.AddAsync(dto.AlbumId, dto.Title, dto.SubtitleType, dto.SubtitleContent, dto.AudioUrl, dto.DurationInSeconds, dto.CoverImgUrl);
 
             return Ok(ApiResponse<long>.Ok(info.Id));
+        }
+        [HttpPut("SubtitleConvert/{id}")]
+        [PermissionKey("Episode.SubtitleConvert")]
+        public async Task<ActionResult<ApiResponse<BaseResponse>>> SubtitleConvert(long id)
+        {
+            var info = await repository.GetByIdAsync(id);
+            if (info == null)
+            {
+                return this.FailResponse("not exist");
+            }
+            if (info.AISubtitleStatus == AISubtitleStatusEnum.Processing)
+            {
+                return this.FailResponse("Subtitle is currently converting");
+            }
+            info.ChangeAISubtitleStatus(AISubtitleStatusEnum.Waiting);
+            await commonQuery.MqPublish(info.Id);
+
+            return this.OkResponse(id);
         }
 
         [HttpPut("{id}")]
