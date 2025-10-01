@@ -25,12 +25,12 @@ namespace Listening.Admin.Api.Dtos.Request
             RuleFor(x => x.SubtitleType)
                 .NotEmpty().WithMessage("SubtitleType is required.");
 
-            RuleFor(x => x.SubtitleContent)
-                .NotEmpty().WithMessage("SubtitleContent is required.");
+            RuleFor(x => x.SubtitleContent).NotEmpty().When(x => x.SubtitleType != "AI_Generate").WithMessage("SubtitleContent is required.");
+
             RuleFor(x => x.AudioUrl)
                 .NotEmpty().WithMessage("AudioUrl is required.");
-       
-           
+
+
         }
     }
 }
